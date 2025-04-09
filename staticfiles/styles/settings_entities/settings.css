@@ -1,0 +1,51 @@
+.project-name H1,
+    .project-name H2,
+    .project-name H3,
+    .project-name H4,
+    .project-name H5,
+    .project-name H6 {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    .project-name UL {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    /* Base for lists & headers */
+    .project-name UL {
+      overflow: hidden;
+    }
+    .project-name LI,
+    .project-name .project-heading {
+      position: relative;
+      padding-left: 1.2em;
+    }
+    .project-name .project-heading + UL {
+      margin-left: 30px;
+      padding-top: 10px;
+    }
+    .project-name LI {
+      margin-bottom: .8em;
+    }
+
+    /* Stripes */
+    .project-name LI:before,
+    .project-name .project-heading:before {
+      content: "";
+      display: block;
+      position: absolute;
+      left: 0;
+      bottom: .5em;
+      width: 15px;
+      height: 0;
+      border-bottom: 1px solid #333;
+    }
+    .project-name .project-heading:last-of-type:before,
+    .project-name LI:last-child:before {
+      height: 1000px;
+      border: 1px solid #333;
+      border-width: 0 0 1px 1px
+    }

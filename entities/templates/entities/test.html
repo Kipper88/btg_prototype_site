@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Сущности</title>
+</head>
+<body>
+    <h1>Список сущностей</h1>
+    <a href="{% url 'entity_create' %}">Добавить сущность</a>
+    <ul>
+        {% for entity in entities %}
+            <li>
+                {{ entity.name }} ({{ entity.slug }})
+                <a href="{% url 'entity_delete' entity.id %}">Удалить</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

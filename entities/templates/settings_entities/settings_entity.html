@@ -1,0 +1,138 @@
+<div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">Добавить поле</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#dropModal">Удалить поле</button>
+
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Новое поле</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm" method="POST">
+                        {% csrf_token %}
+                        <div id="addFields">
+                            <div class="field-row mb-2">
+                                <input type="text" class="form-control d-inline-block w-50" name="column_name[]" placeholder="Имя поля">
+                                <select class="form-control d-inline-block w-25" name="column_type[]">
+                                    <option value="string">Строка</option>
+                                    <option value="integer">Число</option>
+                                    <option value="json">JSON</option>
+                                    <option value="timestamp">Дата/время</option>
+                                </select>
+                                <button type="button" class="btn btn-danger remove-field d-none">-</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary mb-2" id="addMore">Добавить еще</button>
+                        <button type="button" class="btn btn-primary" id="saveAdd">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="dropModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5>Удалить поле</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="dropForm" method="POST">
+                        {% csrf_token %}
+                        <select class="form-control mb-2" name="column_name[]">
+                            {% for column in columns %}
+                                <option value="{{ column }}">{{ column }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="button" class="btn btn-primary" id="saveDrop">Удалить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table" id="columnsTable">
+        <thead><tr><th>Название</th></tr></thead>
+        <tbody>
+            {% for column in columns %}
+                <tr><td>{{ column }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function getCsrfToken() {
+        return document.cookie.split('; ').find(row => row.startsWith('csrftoken='))?.split('=')[1] || '';
+    }
+
+    function sendForm(formId, action) {
+        const form = document.getElementById(formId);
+        const formData = new FormData(form);
+        formData.append('action', action);
+        fetch("{% url 'settings_entity' %}?entity_id={{ table_name }}", {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-CSRFToken': getCsrfToken() }
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data.success ? 'Успех!' : 'Ошибка: ' + data.error);
+            if (data.success) updateTable();
+        })
+        .catch(err => console.error('Ошибка:', err));
+    }
+
+    function updateTable() {
+        fetch("{% url 'settings_entity' %}?entity_id={{ table_name }}")
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector('#columnsTable tbody');
+                tbody.innerHTML = data.columns.map(col => `<tr><td>${col}</td></tr>`).join('');
+                const dropSelect = document.querySelector('#dropForm select');
+                dropSelect.innerHTML = data.columns.map(col => `<option value="${col}">${col}</option>`).join('');
+            })
+            .catch(err => console.error('Ошибка обновления:', err));
+    }
+
+    function updateRemoveButtons() {
+        const fields = document.querySelectorAll('#addFields .field-row');
+        fields.forEach((field, index) => {
+            const removeBtn = field.querySelector('.remove-field');
+            removeBtn.classList.toggle('d-none', fields.length === 1);
+        });
+    }
+
+    document.getElementById('addMore').addEventListener('click', () => {
+        const container = document.getElementById('addFields');
+        const newField = document.createElement('div');
+        newField.className = 'field-row mb-2';
+        newField.innerHTML = `
+            <input type="text" class="form-control d-inline-block w-50" name="column_name[]" placeholder="Имя поля">
+            <select class="form-control d-inline-block w-25" name="column_type[]">
+                <option value="string">Строка</option>
+                <option value="integer">Число</option>
+                <option value="json">JSON</option>
+                <option value="timestamp">Дата/время</option>
+            </select>
+            <button type="button" class="btn btn-danger remove-field">-</button>
+        `;
+        container.appendChild(newField);
+        updateRemoveButtons();
+    });
+
+    document.getElementById('addFields').addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-field')) {
+            e.target.parentElement.remove();
+            updateRemoveButtons();
+        }
+    });
+
+    document.getElementById('saveAdd').addEventListener('click', () => sendForm('addForm', 'add_column'));
+    document.getElementById('saveDrop').addEventListener('click', () => sendForm('dropForm', 'drop_column'));
+
+    updateRemoveButtons();
+</script>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CRM Карточка Компании</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 8px;
+      background-color: #ff5f7c;
+      color: #fff;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .section {
+      margin-top: 30px;
+    }
+    .section h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      row-gap: 10px;
+      column-gap: 20px;
+    }
+    .info-label {
+      font-weight: 600;
+      color: #666;
+    }
+    .user-card {
+      background: #f1f5f9;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+    .user-card h4 {
+      margin: 0 0 5px;
+      font-size: 16px;
+    }
+    .user-card p {
+      margin: 2px 0;
+      font-size: 14px;
+    }
+    a {
+      color: #0077cc;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ЗАО "ФЕСТИНА-РУС" <span class="badge">СБ просрочено</span></h1>
+
+    <div class="section">
+      <h2>Основная информация</h2>
+      <div class="info-grid">
+        <div class="info-label">ID</div><div>67</div>
+        <div class="info-label">Дата добавления</div><div>29.03.2021</div>
+        <div class="info-label">Обновлено</div><div>17.12.2024</div>
+        <div class="info-label">Создано</div><div>Екатерина Дмитриева</div>
+        <div class="info-label">Роль</div><div>Транспортная компания</div>
+        <div class="info-label">ИНН</div><div>7729405456</div>
+        <div class="info-label">Страна</div><div>Россия</div>
+        <div class="info-label">Статус резидента</div><div>Резидент</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Адреса</h2>
+      <div class="info-grid">
+        <div class="info-label">Юридический адрес</div><div>119361, г. Москва, ул. Марии Поливановой, д. 9, офис 5А</div>
+        <div class="info-label">Фактический адрес</div><div>119361, г. Москва, ул. Марии Поливановой, д. 9</div>
+        <div class="info-label">Почтовый адрес</div><div>119361, г. Москва, ул. Марии Поливановой, д. 9</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Контакты</h2>
+      <div class="info-grid">
+        <div class="info-label">Телефон</div><div>+7 (495) 430 77 21</div>
+        <div class="info-label">Email</div><div>info@jenty-spedition.com</div>
+        <div class="info-label">Сайт</div><div><a href="http://jenty-spedition.com" target="_blank">jenty-spedition.com</a></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Пользователи компании</h2>
+      <div class="user-card">
+        <h4>Алия Мурзалиева</h4>
+        <p>Клиентский менеджер</p>
+        <p>Тел: +375 (17) 239-54-16</p>
+        <p>Моб: +375 29 629-11-98</p>
+        <p>Email: amurzalieva@jenty-spedition.com</p>
+      </div>
+      <!-- Добавь другие карточки пользователей сюда -->
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<div class="d-flex flex-column p-3 bg-light rounded shadow-sm" style="min-height: 300px;">
+    <!-- Кнопка для открытия модального окна добавления -->
+    <div class="mb-3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEntityModal">
+            <i class="bi bi-plus-lg"></i> Добавить запись
+        </button>
+    </div>
+
+    <!-- Таблица -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover" id="entityTable">
+            <thead class="table-primary">
+                <tr>
+                    {% for column in columns %}
+                        <th class="text-center">{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in rows %}
+                    <tr>
+                        {% for key, value in row.items %}
+                            {% if key in columns %}
+                                <td>
+                                    <!--onClick="EntityOneUpdateBlock('entity/settings/?entity_id={{ value }}')"
+                                       href="#"-->
+                                    <a  class="text-decoration-none text-primary fw-bold">
+                                        {{ value }}
+                                    </a>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+    </div>
+
+    <!-- Модальное окно для добавления записи -->
+    <div class="modal fade" id="addEntityModal" tabindex="-1" aria-labelledby="addEntityModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="addEntityModalLabel">Добавить новую запись</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addEntityForm" method="POST">
+                        {% csrf_token %}
+                        {% for column in form_rows %}
+                            <div class="mb-3">
+                                <label for="{{ column }}" class="form-label">{{ column }}</label>
+                                <input type="text" class="form-control" id="{{ column }}" name="{{ column }}" required>
+                            </div>
+                        {% endfor %}
+                        <button type="button" class="btn btn-success" id="saveEntityButton">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Инициализация таблицы при загрузке
+    function initializeTable(columns, rows) {
+        const thead = document.getElementById('tableHeaders');
+        const tbody = document.getElementById('entityTableBody');
+
+        // Рендеринг заголовков
+        thead.innerHTML = columns.map(column => `<th class="text-center">${column}</th>`).join('');
+
+        // Рендеринг строк
+        tbody.innerHTML = rows.map(row => {
+            const cells = [];
+            for (let column of columns) {
+                if (column === 'entity_name') {
+                    cells.push(`
+                        <td>
+                            <a onClick="EntityOneUpdateBlock('entity/settings/?entity_id=${row[column] || ''}')" href="#" class="text-decoration-none text-primary fw-bold">
+                                ${row[column] || ''}
+                            </a>
+                        </td>
+                    `);
+                } else {
+                    cells.push(`<td>${row[column] || ''}</td>`);
+                }
+            }
+            return `<tr>${cells.join('')}</tr>`;
+        }).join('');
+    }
+
+    // Обработчик добавления записи
+    document.getElementById('saveEntityButton').addEventListener('click', () => {
+        const form = document.getElementById('addEntityForm');
+        const formData = new FormData(form);
+
+        fetch("{% url 'add_entity_record' %}?entity_id={{ table_name }}", {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-CSRFToken': getCookie('csrftoken'), 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Запись успешно добавлена!');
+                updateTable(data.rows);
+                bootstrap.Modal.getInstance(document.getElementById('addEntityModal')).hide();
+                form.reset(); // Сброс формы
+            } else {
+                alert('Ошибка: ' + data.error);
+            }
+        })
+        .catch(error => alert('Ошибка запроса: ' + error));
+    });
+
+    // Обновление таблицы
+    function updateTable(rows) {
+        const tbody = document.getElementById('entityTableBody');
+        if (rows) {
+            tbody.innerHTML = rows.map(row => {
+                const cells = [];
+                for (let column of initialColumns) {
+                    if (column === 'entity_name') {
+                        cells.push(`
+                            <td>
+                                <a onClick="EntityOneUpdateBlock('entity/settings/?entity_id=${row[column] || ''}')" href="#" class="text-decoration-none text-primary fw-bold">
+                                    ${row[column] || ''}
+                                </a>
+                            </td>
+                        `);
+                    } else {
+                        cells.push(`<td>${row[column] || ''}</td>`);
+                    }
+                }
+                return `<tr>${cells.join('')}</tr>`;
+            }).join('');
+        }
+    }
+
+    // Инициализация таблицы при загрузке страницы
+    initializeTable(initialColumns, initialRows);
+</script>

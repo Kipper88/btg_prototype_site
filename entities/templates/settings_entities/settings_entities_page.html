@@ -1,0 +1,38 @@
+{% load static %}
+<head>
+  <link rel="stylesheet" href="{% static 'styles/settings_entities/settings.css' %}">
+</head>
+
+<div class="project-name">
+  <ul>
+    {% for item in navigation %}
+      <li>
+        <h{% if item.children %}2{% else %}3{% endif %} class="project-heading">
+          {{ item.title }}
+        </h{% if item.children %}2{% else %}3{% endif %}>
+
+        {% if item.children %}
+          <ul>
+            {% for child in item.children %}
+              <li>
+                <h{% if child.children %}3{% else %}4{% endif %} class="project-heading">
+                  {{ child.title }}
+                </h{% if child.children %}3{% else %}4{% endif %}>
+
+                {% if child.children %}
+                  <ul>
+                    {% for grandchild in child.children %}
+                      <li>
+                        <h4 class="project-heading">{{ grandchild.title }}</h4>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>

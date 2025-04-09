@@ -1,0 +1,33 @@
+body {
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+}
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: rgb(65, 109, 255);
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow-y: auto;
+    padding-top: 20px;
+}
+.content {
+    margin-left: 260px;
+    padding: 20px;
+}
+.menu-item {
+    display: block;
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    padding: 10px 15px;
+    cursor: default;
+}
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+}
+.dynamic-block-main {
+    margin-left: 100px;
+    padding: 20px;
+}

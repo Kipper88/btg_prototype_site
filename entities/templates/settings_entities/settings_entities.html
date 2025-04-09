@@ -1,0 +1,23 @@
+<div class="d-flex">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                {% for column in columns %}
+                    <th>{{ column }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+                <tr>
+                    <td>
+                        <a onClick="EntityOneUpdateBlock('entity/settings-entity/?entity_id={{ row.tech_entity_name }}')" href="#">{{ row.entity_name }}</a>
+                    </td>
+                    <td>
+                        {{ row.tech_entity_name }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

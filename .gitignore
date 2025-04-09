@@ -1,0 +1,5 @@
+venv/
+app.log
+db.sqlite3
+rtl.css
+style.scss
